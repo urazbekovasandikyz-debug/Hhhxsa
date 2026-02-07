@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minecraft 3D Mobile</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Игровой холст -->
+    <canvas id="gameCanvas"></canvas>
+    
+    <!-- Мобильное управление -->
+    <div id="mobileControls">
+        <!-- Джойстик движения -->
+        <div id="joystickContainer">
+            <div id="joystickBase"></div>
+            <div id="joystickHandle"></div>
+        </div>
+        
+        <!-- Область управления камерой -->
+        <div id="cameraTouchArea"></div>
+        
+        <!-- Панель действий -->
+        <div class="actionPanel">
+            <div class="actionRow">
+                <button class="actionBtn" id="jumpBtn">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+            </div>
+            <div class="actionRow">
+                <button class="actionBtn" id="placeBtn">
+                    <i class="fas fa-plus-square"></i>
+                </button>
+                <button class="actionBtn" id="destroyBtn">
+                    <i class="fas fa-minus-square"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Панель выбора блоков -->
+        <div class="blockPanel">
+            <div class="blockSlot active" data-type="grass">🟩</div>
+            <div class="blockSlot" data-type="dirt">🟫</div>
+            <div class="blockSlot" data-type="stone">⬜</div>
+            <div class="blockSlot" data-type="wood">🟤</div>
+        </div>
+        
+        <!-- Статус игры -->
+        <div id="gameStatus">
+            <div id="positionInfo">X: 0 Y: 0 Z: 0</div>
+            <div id="fpsCounter">FPS: 60</div>
+        </div>
+    </div>
+    
+    <!-- Кнопка паузы/меню -->
+    <button id="menuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>
