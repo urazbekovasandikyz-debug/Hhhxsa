@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Tre Geiming - 3D Minecraft для телефонов</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Начальный экран -->
+    <div id="startScreen" class="screen active">
+        <div class="title-container">
+            <div class="title-glitch" data-text="THE TRE GEIMING">THE TRE GEIMING</div>
+            <div class="title-sub">3D MINECRAFT ДЛЯ ТЕЛЕФОНОВ</div>
+            <div class="version">v1.0.0</div>
+        </div>
+        
+        <div class="menu-container">
+            <button id="playBtn" class="menu-btn pulse">
+                <i class="fas fa-play-circle"></i>
+                <span>ИГРАТЬ</span>
+            </button>
+            
+            <button id="createWorldBtn" class="menu-btn">
+                <i class="fas fa-plus-circle"></i>
+                <span>СОЗДАТЬ МИР</span>
+            </button>
+            
+            <button id="settingsBtn" class="menu-btn">
+                <i class="fas fa-cog"></i>
+                <span>НАСТРОЙКИ</span>
+            </button>
+            
+            <button id="helpBtn" class="menu-btn">
+                <i class="fas fa-question-circle"></i>
+                <span>ПОМОЩЬ</span>
+            </button>
+        </div>
+        
+        <!-- Список миров (изначально скрыт) -->
+        <div id="worldsList" class="worlds-list hidden">
+            <div class="worlds-header">
+                <h3><i class="fas fa-globe-americas"></i> ВАШИ МИРЫ</h3>
+                <button id="closeWorldsBtn" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="worlds-container" id="worldsContainer">
+                <!-- Миры будут добавляться через JavaScript -->
+            </div>
+            <div class="no-worlds" id="noWorldsMessage">
+                <i class="fas fa-inbox"></i>
+                <p>У вас пока нет миров</p>
+                <small>Создайте первый мир!</small>
+            </div>
+        </div>
+        
+        <div class="controls-hint">
+            <div class="hint-item">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Полностью адаптировано для телефонов</span>
+            </div>
+            <div class="hint-item">
+                <i class="fas fa-save"></i>
+                <span>Автосохранение в браузере</span>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="stats">
+                <span id="totalWorlds">Миров: 0</span>
+                <span id="totalBlocks">Блоков: 0</span>
+            </div>
+            <div class="credits">
+                Создано с ❤️ для мобильных геймеров
+            </div>
+        </div>
+    </div>
+    
+    <!-- Экран создания мира -->
+    <div id="createScreen" class="screen">
+        <div class="create-header">
+            <button id="backBtn" class="back-btn">
+                <i class="fas fa-arrow-left"></i> НАЗАД
+            </button>
+            <h2><i class="fas fa-magic"></i> СОЗДАНИЕ МИРА</h2>
+        </div>
+        
+        <div class="create-form">
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="worldName">
+                        <i class="fas fa-signature"></i> НАЗВАНИЕ МИРА
+                    </label>
+                    <input type="text" id="worldName" 
+                           placeholder="Введите название мира" 
+                           maxlength="20"
+                           value="Мой мир">
+                    <div class="char-count">0/20</div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3><i class="fas fa-expand-alt"></i> РАЗМЕР МИРА</h3>
+                <div class="size-options">
+                    <div class="size-option active" data-size="tiny">
+                        <div class="size-icon">▫️</div>
+                        <div class="size-info">
+                            <div class="size-name">ОЧЕНЬ МАЛЕНЬКИЙ</div>
+                            <div class="size-desc">16×16 блоков</div>
+                            <div class="size-desc">Для слабых телефонов</div>
+                        </div>
+                    </div>
+                    
+                    <div class="size-option" data-size="small">
+                        <div class="size-icon">🔹</div>
+                        <div class="size-info">
+                            <div class="size-name">МАЛЕНЬКИЙ</div>
+                            <div class="size-desc">32×32 блока</div>
+                            <div class="size-desc">Быстрая загрузка</div>
+                        </div>
+                    </div>
+                    
+                    <div class="size-option" data-size="medium">
+                        <div class="size-icon">🔸</div>
+                        <div class="size-info">
+                            <div class="size-name">СРЕДНИЙ</div>
+                            <div class="size-desc">48×48 блоков</div>
+                            <div class="size-desc">Рекомендуется</div>
+                        </div>
+                    </div>
+                    
+                    <div class="size-option" data-size="large">
+                        <div class="size-icon">🔺</div>
+                        <div class="size-info">
+                            <div class="size-name">БОЛЬШОЙ</div>
+                            <div class="size-desc">64×64 блоков</div>
+                            <div class="size-desc">Для мощных телефонов</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3><i class="fas fa-mountain"></i> ТИП МИРА</h3>
+                <div class="type-options">
+                    <div class="type-option active" data-type="normal">
+                        <div class="type-icon">🏔️</div>
+                        <div class="type-name">НОРМАЛЬНЫЙ</div>
+                    </div>
+                    
+                    <div class="type-option" data-type="flat">
+                        <div class="type-icon">🏞️</div>
+                        <div class="type-name">ПЛОСКИЙ</div>
+                    </div>
+                    
+                    <div class="type-option" data-type="mountains">
+                        <div class="type-icon">⛰️</div>
+                        <div class="type-name">ГОРЫ</div>
+                    </div>
+                    
+                    <div class="type-option" data-type="islands">
+                        <div class="type-icon">🏝️</div>
+                        <div class="type-name">ОСТРОВА</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="worldSeed">
+                        <i class="fas fa-seedling"></i> СИД (ОПЦИОНАЛЬНО)
+                    </label>
+                    <input type="text" id="worldSeed" 
+                           placeholder="Оставьте пустым для случайного"
+                           value="">
+                    <div class="seed-info">Любое число или слово</div>
+                </div>
+            </div>
+            
+            <button id="generateBtn" class="generate-btn pulse">
+                <i class="fas fa-bolt"></i>
+                <span>СГЕНЕРИРОВАТЬ МИР</span>
+            </button>
+            
+            <div class="generation-info">
+                <i class="fas fa-info-circle"></i>
+                <span>Генерация займет несколько секунд</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Экран загрузки -->
+    <div id="loadingScreen" class="screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-title" id="loadingTitle">ГЕНЕРАЦИЯ МИРА</div>
+            <div class="loading-subtitle" id="loadingSubtitle">Подготовка...</div>
+            
+            <div class="loading-progress-container">
+                <div class="loading-progress-bar">
+                    <div class="loading-progress-fill" id="progressFill"></div>
+                </div>
+                <div class="loading-progress-text" id="progressText">0%</div>
+            </div>
+            
+            <button id="cancelLoadingBtn" class="cancel-btn">
+                <i class="fas fa-times"></i> Отменить
+            </button>
+            
+            <div class="loading-tips">
+                <div class="tip" id="loadingTip">
+                    💡 Совет: Маленькие миры генерируются быстрее
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Игровой экран -->
+    <div id="gameScreen" class="screen">
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- Игровой интерфейс -->
+        <div id="gameUI">
+            <!-- Верхняя панель -->
+            <div class="ui-top">
+                <div class="world-info">
+                    <span id="currentWorldName">Мир 1</span>
+                    <div class="player-coords">
+                        <span id="playerCoords">X: 0 Y: 0 Z: 0</span>
+                    </div>
+                </div>
+                <div class="stats-info">
+                    <div class="fps-counter" id="fpsCounter">60 FPS</div>
+                    <button id="menuBtn" class="ui-btn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Центр - прицел -->
+            <div class="ui-center">
+                <div class="crosshair" id="crosshair">
+                    <div class="crosshair-dot"></div>
+                    <div class="crosshair-lines">
+                        <div class="line top"></div>
+                        <div class="line bottom"></div>
+                        <div class="line left"></div>
+                        <div class="line right"></div>
+                    </div>
+                </div>
+                <div class="action-indicator" id="actionIndicator">
+                    <i class="fas fa-mouse-pointer"></i>
+                </div>
+            </div>
+            
+            <!-- Нижняя панель -->
+            <div class="ui-bottom">
+                <!-- Панель выбора блоков -->
+                <div class="blocks-panel">
+                    <div class="blocks-scroll">
+                        <div class="block-slot active" data-block="grass">
+                            <div class="block-preview grass"></div>
+                            <div class="block-name">Трава</div>
+                            <div class="block-hotkey">1</div>
+                        </div>
+                        
+                        <div class="block-slot" data-block="dirt">
+                            <div class="block-preview dirt"></div>
+                            <div class="block-name">Земля</div>
+                            <div class="block-hotkey">2</div>
+                        </div>
+                        
+                        <div class="block-slot" data-block="stone">
+                            <div class="block-preview stone"></div>
+                            <div class="block-name">Камень</div>
+                            <div class="block-hotkey">3</div>
+                        </div>
+                        
+                        <div class="block-slot" data-block="wood">
+                            <div class="block-preview wood"></div>
+                            <div class="block-name">Дерево</div>
+                            <div class="block-hotkey">4</div>
+                        </div>
+                        
+                        <div class="block-slot" data-block="glass">
+                            <div class="block-preview glass"></div>
+                            <div class="block-name">Стекло</div>
+                            <div class="block-hotkey">5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Левая панель - управление -->
+            <div class="ui-left">
+                <div class="joystick-container" id="joystickContainer">
+                    <div class="joystick-base" id="joystickBase">
+                        <div class="joystick-handle" id="joystickHandle"></div>
+                    </div>
+                    <div class="joystick-label">ДВИЖЕНИЕ</div>
+                </div>
+                
+                <button id="jumpBtn" class="action-btn big-btn">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>ПРЫЖОК</span>
+                </button>
+            </div>
+            
+            <!-- Правая панель -->
+            <div class="ui-right">
+                <div class="camera-area" id="cameraArea"></div>
+                
+                <div class="action-buttons">
+                    <button id="placeBtn" class="action-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Поставить</span>
+                    </button>
+                    
+                    <button id="breakBtn" class="action-btn">
+                        <i class="fas fa-minus"></i>
+                        <span>Сломать</span>
+                    </button>
+                    
+                    <button id="inventoryBtn" class="action-btn">
+                        <i class="fas fa-backpack"></i>
+                        <span>Инвентарь</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Меню паузы -->
+        <div id="pauseMenu" class="pause-menu hidden">
+            <div class="pause-header">
+                <h2><i class="fas fa-pause"></i> ПАУЗА</h2>
+                <div class="world-info-pause">
+                    <span id="pauseWorldName">Мир 1</span>
+                    <div class="play-time" id="playTime">Время: 0:00</div>
+                </div>
+            </div>
+            
+            <div class="pause-options">
+                <button id="resumeBtn" class="pause-option-btn">
+                    <i class="fas fa-play"></i>
+                    <span>ПРОДОЛЖИТЬ</span>
+                </button>
+                
+                <button id="saveBtn" class="pause-option-btn">
+                    <i class="fas fa-save"></i>
+                    <span>СОХРАНИТЬ МИР</span>
+                </button>
+                
+                <button id="settingsGameBtn" class="pause-option-btn">
+                    <i class="fas fa-cog"></i>
+                    <span>НАСТРОЙКИ</span>
+                </button>
+                
+                <button id="exitBtn" class="pause-option-btn exit">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>ВЫЙТИ В МЕНЮ</span>
+                </button>
+            </div>
+            
+            <div class="pause-stats">
+                <div class="stat">
+                    <i class="fas fa-cube"></i>
+                    <span>Блоков: <span id="blocksCount">0</span></span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-walking"></i>
+                    <span>Пройдено: <span id="distanceWalked">0</span>м</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-clock"></i>
+                    <span>Сессия: <span id="sessionTime">0:00</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+                          </html>
